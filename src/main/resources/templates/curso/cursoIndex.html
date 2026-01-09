@@ -1,0 +1,41 @@
+<html>
+<head th:replace="~{_frag/Base::site-head}"></head>
+<body>
+    <header th:replace="~{_frag/Base::site-header}"></header>
+    <article class="container mt-3">
+        <h3>Lista de Cursos</h3>
+        <div>
+            <th:block th:replace="~{_frag/Inputs::btn_agregar(@{/curso/nuevo}, 'Agregar Curso')}"></th:block>
+            <th:block th:replace="~{_frag/Inputs::btn_cerrar}"></th:block>
+        </div>
+        <div>
+            <table class="table table-striped table-bordered mt-2">
+                <thead>
+                    <tr class="table-primary">
+                        <th>Nombre</th> 
+                        <th>Créditos</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="curso : ${listaCursos}">
+                        <td th:text="${curso.nombre}">nombre</td> 
+                        <td th:text="${curso.creditos}">creditos</td>
+                        <td>
+                            <th:block th:replace="~{_frag/Inputs::btn_editar(@{/curso/editar/} + ${curso.id})}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:replace="~{_frag/Inputs::btn_eliminar(@{/curso/eliminar/} + ${curso.id})}"></th:block>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <th:block th:replace="~{_frag/Inputs::btn_agregar(@{/curso/nuevo}, 'Agregar Curso')}"></th:block>
+            <th:block th:replace="~{_frag/Inputs::btn_cerrar}"></th:block>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="hhtp://www.thymeleaf.org">
+<head th:replace="disenoBase::site-head"></head>
+<body>
+	<header th:replace="disenoBase::site-header"></header>
+	
+	<main role="main">
+		<div class="container" id="divCasoForm">
+			<div class="page-header">
+				<h4 class="text-primary">Datos de Alumno</h4>
+			</div>
+			<div class="container">
+				
+				<form th:object="${alumno}" th:action="@{/alumno/nuevo}" method="post">
+					<div th:if="${#fields.hasErrors('*')}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<strong>Un incoveniente!</strong>
+							Por favor verifique lo ingresado.
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+							
+						</button>
+					</div>
+					
+					<div class="form-group">
+						<!-- <label for="inputID">ID:</label> -->
+						<input type="hidden" class="form-control disabled" id="inputID" placeholder="ingrese id"
+								th:field="*{id}" th:value="*{id}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{id}">Error</small>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="inputApellido">Apellidos: </label>
+						<input type="text" id="inputApellido" placeholder="ingrese apellidos"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('apellido')}
+												? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{apellido}" th:value="*{apellido}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{apellido}">Error</small>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="inputNombre">Nombres: </label>
+						<input type="text" id="inputNombre" placeholder="ingrese nombres"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('nombre')}
+												? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{nombre}" th:value="*{nombre}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{nombre}">Error</small>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="inputDNI">DNI: </label>
+						<input type="text" id="inputDNI" placeholder="ingrese DNI"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('dni')}
+												? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{dni}" th:value="*{dni}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{dni}">Error</small>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="inputFechaNacimiento">Fecha de Nacimiento: </label>
+						<input type="date" id="inputFechaNacimiento"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('fechaNacimiento')}
+												? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{fechaNacimiento}" th:value="*{fechaNacimiento}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{fechaNacimiento}">Error</small>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="inputCelular">Celular: </label>
+						<input type="text" id="inputCelular" placeholder="ingrese Nro Celular"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('celular')}
+												? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{celular}" th:value="*{celular}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{celular}">Error</small>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="inputEmail">eMail: </label>
+						<input type="email" id="inputEmail" placeholder="ingrese eMail"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('eMail')}
+												? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{eMail}" th:value="*{eMail}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{eMail}">Error</small>
+						</div>
+					</div>
+						
+					<div class="form-group">
+						<label for="inputDireccion">Direccion: </label>
+						<input type="text" id="inputDireccion" placeholder="ingrese Direccion"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('direccion')}
+													? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{direccion}" th:value="*{direccion}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{direccion}">Error</small>
+						</div>
+					</div>			
+					
+					<div class="form-group">
+						<label for="inputPromedio">Promedio: </label>
+						<input type="text" id="inputPromedio" placeholder="ingrese Promedio"
+								 th:class="${#fields.hasErrors('*')}
+								 			? (${#fields.hasErrors('promedio')}
+													? 'form-control is-invalid'
+												: 'form-control is-valid')
+											: 'form-control'"
+								  th:field="*{promedio}" th:value="*{promedio}"/>
+						<div class="valid-feedback">
+							<small>Correcto!</small>
+						</div>
+						<div class="invalid-feedback">
+							<small th:errors="*{promedio}">Error</small>
+						</div>
+					</div>	
+					
+					<br>
+					<button type="submit" class="btn btn-outline-primary">Aceptar</button>
+					<a class="btn btn-outline-secondary" th:href="@{/alumno/index}" role="button">Regresar</a>
+				</form>
+			</div>
+		</div>
+	</main>
+	
+	<footer th:replace="disenoBase::site-footer"></footer>
+</body>
+</html>

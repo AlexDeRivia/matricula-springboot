@@ -1,0 +1,75 @@
+<html>
+<head th:replace="~{_frag/Base::site-head}"></head>
+<body>
+    <header th:replace="~{_frag/Base::site-header}"></header>
+    <article class="container mt-3">
+        <h3>Datos de Docente</h3>
+        <form th:object="${docente}" th:action="@{/docente/guardar}" th:method="post">
+            <div class="form-group mb-3">
+                <label hidden="true" for="inputID" class="form-label">ID:</label>
+                <input type="hidden" id="inputID" placeholder="Ingrese ID"
+                       th:field="*{id}" th:value="*{id}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputApellidos" class="form-label">Apellidos:</label>
+                <input type="text" id="inputApellidos" placeholder="Ingrese Apellidos"
+                       th:field="*{apellidos}" th:value="*{apellidos}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputNombres" class="form-label">Nombres:</label>
+                <input type="text" id="inputNombres" placeholder="Ingrese Nombres"
+                       th:field="*{nombres}" th:value="*{nombres}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputDNI" class="form-label">DNI:</label>
+                <input type="text" id="inputDNI" placeholder="Ingrese DNI"
+                       th:field="*{dni}" th:value="*{dni}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputFechaNac" class="form-label">Fecha Nacimiento:</label>
+                <input type="date" id="inputFechaNac" class="form-control"
+                       th:field="*{fechaNacimiento}" th:value="*{fechaNacimiento}"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputDireccion" class="form-label">Dirección:</label>
+                <input type="text" id="inputDireccion" placeholder="Ingrese Direccion"
+                       th:field="*{direccion}" th:value="*{direccion}" size="50" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputCelular" class="form-label">Celular:</label>
+                <input type="tel" id="inputCelular" placeholder="Ingrese Celular"
+                       th:field="*{celular}" th:value="*{celular}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputEMail" class="form-label">eMail:</label>
+                <input type="email" id="inputEMail" placeholder="Ingrese correo electrónico"
+                       th:field="*{eMail}" th:value="*{eMail}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputEspecialidad" class="form-label">Especialidad:</label>
+                <input type="text" id="inputEspecialidad" placeholder="Ingrese Especialidad"
+                       th:field="*{especialidad}" th:value="*{especialidad}" class="form-control"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputFechaIng" class="form-label">Fecha Ingreso:</label>
+                <input type="date" id="inputFechaIng"
+                       th:field="*{fechaIngreso}" th:value="*{fechaIngreso}" class="form-control"/>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-outline-primary">Aceptar</button>
+                <a th:href="@{/docente/index}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </article>
+</body>
+</html>

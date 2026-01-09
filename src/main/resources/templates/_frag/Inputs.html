@@ -1,0 +1,40 @@
+<div th:fragment="iHtml(tipo, label, ph, campo)" class="form-group mb-3">
+    <label th:if="${tipo != 'hidden'}" 
+        th:for="${'input' + campo}" th:text="${label}" 
+        class="form-label"> Etiqueta </label>
+    <input th:type="${tipo}" th:id="${'input' + campo}" 
+        th:placeholder="${ph}"
+        th:field="*{${campo}}" th:value="*{${campo}}" 
+        th:class="${fields.hasErrors('*{${campo}}') ? 'form-control is-invalid' : 'form-control is-valid'}"
+        class="form-control"/>
+    <div th:if="${tipo != 'hidden'}" class="valid-feedback">
+        <small>Correcto!</small>
+    </div>
+    <div th:if="${tipo != 'hidden'}" class="invalid-feedback"> 
+        <small th:errors="*{${campo}}"></small>
+    </div>
+</div>
+
+<th:block th:fragment="btn_agregar(ruta, texto)">
+    <a th:href="${ruta}" class="btn btn-outline-primary" th:text="${texto}"></a>
+</th:block>
+
+<th:block th:fragment="btn_cerrar">
+    <a th:href="@{ / }" class="btn btn-outline-secondary">Cerrar</a>
+</th:block>
+
+<th:block th:fragment="btn_aceptar">
+    <button type="submit" class="btn btn-outline-primary">Aceptar</button>
+</th:block>
+
+<th:block th:fragment="btn_cancelar(ruta)">
+    <a th:href="${ruta}" class="btn btn-outline-secondary">Cancelar</a>
+</th:block>
+
+<th:block th:fragment="btn_editar(ruta)">
+    <a th:href="${ruta}" class="btn btn-outline-warning btn-sm">Editar</a>
+</th:block>
+
+<th:block th:fragment="btn_eliminar(ruta)">
+    <a th:href="${ruta}" class="btn btn-outline-danger btn-sm">Eliminar</a>
+</th:block>

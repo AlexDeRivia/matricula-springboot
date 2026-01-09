@@ -1,0 +1,47 @@
+<html>
+<head th:replace="~{_frag/Base::site-head}"></head> 
+<body>
+    <header th:replace="~{_frag/Base::site-header}"></header>
+    <article class="container mt-3">
+        <h3>Listado de Docentes</h3>
+        <div>
+            <a th:href="@{/docente/nuevo}" class="btn btn-outline-primary">Agregar Docente</a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">Cerrar</a> 
+        </div>
+        <div>
+            <table class="table table-striped mt-2 table-bordered">
+                <thead>
+                    <tr class="table-primary">
+                        <th>Apellidos</th> 
+                        <th>Nombres</th> 
+                        <th>DNI</th>
+                        <th>Celular</th>
+                        <th>eMail</th>
+                        <th>Especialidad</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Editar</th> 
+                        <th>Eliminar</th> <!-- Cambié </td> por </th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="docente : ${listaDocentes}">
+                        <td th:text="${docente.apellidos}">Apellidos</td> 
+                        <td th:text="${docente.nombres}">Nombres</td>
+                        <td th:text="${docente.dni}">DNI</td>
+                        <td th:text="${docente.celular}">Celular</td>
+                        <td th:text="${docente.eMail}">eMail</td>
+                        <td th:text="${docente.especialidad}">Especialidad</td> 
+                        <td th:text="${#calendars.format(docente.fechaIngreso, 'dd/MM/yyyy')}">Fecha Ingreso</td>
+                        <td><a th:href="@{/docente/editar/}+${docente.id}" class="btn btn-outline-warning btn-sm">Editar</a></td>
+                        <td><a th:href="@{/docente/eliminar/}+${docente.id}" class="btn btn-outline-danger btn-sm">Eliminar</a></td>
+                    </tr> 
+                </tbody>
+            </table>
+        </div> 
+        <div>
+            <a th:href="@{/docente/nuevo}" class="btn btn-outline-primary">Agregar Docente</a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">Cerrar</a> 
+        </div>
+    </article>
+</body>
+</html>

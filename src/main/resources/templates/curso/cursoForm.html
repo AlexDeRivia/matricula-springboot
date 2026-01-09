@@ -1,0 +1,35 @@
+<html>
+<head th:replace="~{_frag/Base::site-head}"></head>
+
+<body>
+    <header th:replace="~{_frag/Base::site-header}"></header>
+    <article class="container mt-3">
+        <h2>Datos de Curso</h2>
+        <form th:object="${curso}" th:action="@{/curso/guardar}" method="post">
+        
+        <div th:replace="~{_frag/Inputs::iHtml('hidden', 'ID:', '', id)}"></div>
+        
+        <div th:replace="~{_frag/Inputs::iHtml('text', 'Nombre Curso:', 'Ingrese Nombre', nombre)}"></div>
+        
+        <div th:replace="~{_frag/Inputs::iHtml('number', 'Creditos:', 'Ingrese Creditos', creditos)}"></div>
+
+        <div class="mb-3">
+            <label for="selectDocente" class="form-label">Docente:</label>
+            <select id="selectDocente" name="docente.id" class="form-select">
+                <option value="">-- Seleccione Docente --</option>
+                <option th:each="oDocente : ${listaDocentes}" 
+                        th:value="${oDocente.id}" 
+                        th:text="${oDocente.apellidos} + ', ' + ${oDocente.nombres}" 
+                        th:selected="${oDocente.id} == ${curso.docente.id}">
+                </option>
+            </select>
+        </div>
+        
+        <div>
+            <div th:replace="~{_frag/Inputs::btn_aceptar}"></div>
+            <div th:replace="~{_frag/Inputs::btn_cancelar(@{/curso/index})}"></div>
+        </div>
+        </form>
+    </article>
+</body>
+</html>
