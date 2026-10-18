@@ -1,4 +1,10 @@
-# Sistema de control académico — demo local
+# Sistema de control académico
+
+**Demo pública:** https://matricula-springboot.onrender.com
+
+**Acceso de consulta:** `demo` / `demo123`
+
+El servicio gratuito puede tardar entre uno y dos minutos en responder después de un periodo de inactividad.
 
 Aplicación educativa de Spring Boot para registrar alumnos, docentes y cursos, matricular alumnos, cargar calificaciones y consultar su boleta. El perfil `demo` arranca por defecto con una base H2 en memoria y datos completamente ficticios. Los datos vuelven a su estado inicial al reiniciar la aplicación.
 
