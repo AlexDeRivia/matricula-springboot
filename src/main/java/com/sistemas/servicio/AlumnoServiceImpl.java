@@ -5,15 +5,19 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sistemas.entidad.Alumno;
 import com.sistemas.repositorio.AlumnoRepository;
+import com.sistemas.repositorio.NotaRepository;
 
 @Service
 public class AlumnoServiceImpl implements AlumnoService{
 
 	@Autowired
 	private AlumnoRepository alumnoRepository;
+	@Autowired
+	private NotaRepository notaRepository;
 	
 	@Override
 	public Alumno agregar (Alumno entidad) {
@@ -41,7 +45,11 @@ public class AlumnoServiceImpl implements AlumnoService{
 	}
 	
 	@Override
+	@Transactional
 	public void eliminar (Long id) {
+		if (notaRepository.existsByAlumnoId(id)) {
+			throw new RegistroEnUsoException("No se puede eliminar al alumno porque tiene cursos matriculados. Revise su boleta, borre las notas si corresponde y retire las matrículas.");
+		}
 		alumnoRepository.deleteById(id);
 	}
 }

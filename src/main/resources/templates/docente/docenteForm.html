@@ -1,75 +1,29 @@
-<html>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{_frag/Base::site-head}"></head>
 <body>
-    <header th:replace="~{_frag/Base::site-header}"></header>
-    <article class="container mt-3">
-        <h3>Datos de Docente</h3>
-        <form th:object="${docente}" th:action="@{/docente/guardar}" th:method="post">
-            <div class="form-group mb-3">
-                <label hidden="true" for="inputID" class="form-label">ID:</label>
-                <input type="hidden" id="inputID" placeholder="Ingrese ID"
-                       th:field="*{id}" th:value="*{id}" class="form-control"/>
+<header th:replace="~{_frag/Base::site-header}"></header>
+<main id="contenido" class="page-shell page-enter">
+    <div class="page-topline"><div><h1 class="page-title" th:text="${docente.id == null ? 'Nuevo docente' : 'Editar docente'}"></h1></div><a class="back-link" th:href="@{/docente/index}">Volver a docentes</a></div>
+    <div class="form-shell">
+        <aside class="form-aside"><h2>Datos del docente</h2><p>Registra la identidad y la especialidad para asignar cursos con claridad.</p></aside>
+        <form class="form-sheet" th:object="${docente}" th:action="@{/docente/guardar}" method="post" data-progress novalidate>
+            <input type="hidden" th:field="*{id}">
+            <div class="form-alert" th:if="${#fields.hasErrors('*')}" role="alert"><strong>Revisa los campos señalados.</strong>Corrige los datos y vuelve a guardar.</div>
+            <div class="form-grid">
+                <div th:replace="~{_frag/Inputs::iHtml('text', 'Apellidos', 'Apellidos', 'apellidos')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('text', 'Nombres', 'Nombres', 'nombres')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('text', 'DNI', '8 dígitos', 'dni')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('date', 'Fecha de nacimiento', '', 'fechaNacimiento')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('tel', 'Celular', '9 dígitos', 'celular')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('email', 'Correo electrónico', 'nombre@ejemplo.com', 'eMail')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('text', 'Especialidad', 'Área de enseñanza', 'especialidad')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('date', 'Fecha de ingreso', '', 'fechaIngreso')}"></div>
+                <div th:replace="~{_frag/Inputs::iHtml('text', 'Dirección', 'Dirección del docente', 'direccion')}"></div>
             </div>
-
-            <div class="form-group mb-3">
-                <label for="inputApellidos" class="form-label">Apellidos:</label>
-                <input type="text" id="inputApellidos" placeholder="Ingrese Apellidos"
-                       th:field="*{apellidos}" th:value="*{apellidos}" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputNombres" class="form-label">Nombres:</label>
-                <input type="text" id="inputNombres" placeholder="Ingrese Nombres"
-                       th:field="*{nombres}" th:value="*{nombres}" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputDNI" class="form-label">DNI:</label>
-                <input type="text" id="inputDNI" placeholder="Ingrese DNI"
-                       th:field="*{dni}" th:value="*{dni}" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputFechaNac" class="form-label">Fecha Nacimiento:</label>
-                <input type="date" id="inputFechaNac" class="form-control"
-                       th:field="*{fechaNacimiento}" th:value="*{fechaNacimiento}"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputDireccion" class="form-label">Dirección:</label>
-                <input type="text" id="inputDireccion" placeholder="Ingrese Direccion"
-                       th:field="*{direccion}" th:value="*{direccion}" size="50" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputCelular" class="form-label">Celular:</label>
-                <input type="tel" id="inputCelular" placeholder="Ingrese Celular"
-                       th:field="*{celular}" th:value="*{celular}" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputEMail" class="form-label">eMail:</label>
-                <input type="email" id="inputEMail" placeholder="Ingrese correo electrónico"
-                       th:field="*{eMail}" th:value="*{eMail}" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputEspecialidad" class="form-label">Especialidad:</label>
-                <input type="text" id="inputEspecialidad" placeholder="Ingrese Especialidad"
-                       th:field="*{especialidad}" th:value="*{especialidad}" class="form-control"/>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="inputFechaIng" class="form-label">Fecha Ingreso:</label>
-                <input type="date" id="inputFechaIng"
-                       th:field="*{fechaIngreso}" th:value="*{fechaIngreso}" class="form-control"/>
-            </div>
-
-            <div>
-                <button type="submit" class="btn btn-outline-primary">Aceptar</button>
-                <a th:href="@{/docente/index}" class="btn btn-outline-secondary">Cancelar</a>
-            </div>
+            <div class="form-actions"><button type="submit" class="btn btn-primary" data-loading-label="Guardando…">Guardar docente</button><a class="btn btn-outline-secondary" th:href="@{/docente/index}">Cancelar</a></div>
         </form>
-    </article>
+    </div>
+</main>
 </body>
 </html>

@@ -1,67 +1,39 @@
 <head th:fragment="site-head">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-    
-    <title>Ejemplo SpringBoot JPA</title>
+    <meta name="theme-color" content="#dedede">
+    <title>Control Académico</title>
     <link rel="icon" th:href="@{/images/icono-app.png}">
-    
-    <script th:src="@{/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/interface.css}">
+    <script defer th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script defer th:src="@{/js/interface.js}"></script>
 </head>
 
-    <header th:fragment="site-header">
-        <nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="background-color:rgb(13, 155, 145)">
-            <div class="container-fluid">
-                <a class="navbar-brand" th:href="@{/}">
-                    <img th:src="@{/images/icono-app.png}" width="25" height="25" class="d-inline-block align-text-top"> 
-                    Sistema de Control Académico
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Procesos
-                            </a>
-                            <ul class="dropdown-menu" data-bs-theme="light">
-                                <li><a class="dropdown-item" th:href="@{/docente/index}">Registrar Docente</a></li>
-                                <li><a class="dropdown-item" th:href="@{/curso/index}">Registrar Curso</a></li>
-                                <li><a class="dropdown-item" th:href="@{/alumno/index}">Registrar Alumno</a></li>
-                                <li><a class="dropdown-item" th:href="@{/nota/index}">Registrar Notas</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Salir</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Reportes
-                            </a>
-                            <ul class="dropdown-menu" data-bs-theme="light">
-                                <li><a class="dropdown-item" th:href="@{/nota/matriculados}">Reporte de Matriculados</a></li>
-                                <li><a class="dropdown-item" th:href="@{/nota/boleta}">Boleta de Notas</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" th:href="@{/nota/cuadromeritos}">Cuadro de Méritos</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-				<div class="me-auto">
-					<div sec:authorize="isAuthenticated()">
-						<form th:action="@{/logout}" method="post" id="logoutForm">
-							<p class="text-while align-middle m-0">
-								<strong sec:authentication="name">Usuario</strong>
-								<small sec:authentication="principal.authorities">Roles</small>
-								<button type="submit" class="btn btn-link btn-sm text-white p-0">
-									Cerrar Sesion	
-								</button>			
-							</p>		
-						</form>	
-					</div>
-				</div>
+<header th:fragment="site-header" class="site-header">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <div class="site-header-inner">
+        <a class="brand" th:href="@{/}" aria-label="Control Académico, inicio">
+            <span class="brand-name">Control<br><strong>Académico</strong></span>
+            <span class="brand-note">Matrícula y notas</span>
+        </a>
+        <button class="nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNav"
+                aria-controls="primaryNav" aria-expanded="false" aria-label="Abrir menú">
+            <span></span><span></span>
+        </button>
+        <div class="collapse site-navigation" id="primaryNav">
+            <nav class="site-nav" aria-label="Navegación principal">
+                <a th:href="@{/alumno/index}">Alumnos</a>
+                <a th:href="@{/curso/index}">Cursos</a>
+                <a th:href="@{/docente/index}">Docentes</a>
+            </nav>
+            <div class="session-tools" sec:authorize="isAuthenticated()">
+                <div class="session-identity"><span class="session-name" sec:authentication="name">Usuario</span><span class="session-role" sec:authorize="hasRole('ADMIN')">Puede editar</span><span class="session-role" sec:authorize="hasRole('VIEWER')">Solo lectura</span></div>
+                <form th:action="@{/logout}" method="post"><button type="submit" class="session-exit">Cerrar sesión</button></form>
             </div>
-        </nav>
-    </header>
+            <a class="session-login" th:href="@{/usuario/login}" sec:authorize="!isAuthenticated()">Iniciar sesión</a>
+        </div>
+    </div>
+    <div class="global-notice" th:if="${success}" role="status" th:text="${success}"></div>
+    <div class="global-notice global-notice--error" th:if="${error}" role="alert" th:text="${error}"></div>
+</header>

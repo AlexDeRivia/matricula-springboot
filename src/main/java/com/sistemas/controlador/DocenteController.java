@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sistemas.entidad.Docente;
 import com.sistemas.servicio.DocenteService;
+import com.sistemas.servicio.RegistroEnUsoException;
 
 import jakarta.validation.Valid;
 
@@ -42,15 +46,17 @@ public class DocenteController {
 	public String docenteNuevoProcesar(
 			@Valid @ModelAttribute("docente") Docente docente,
 			BindingResult bindingResult,
-			Model model) {
+			Model model, RedirectAttributes redirectAttributes) {
 		if(bindingResult.hasErrors())
 			//si hubo errores mestra el formulario para corregir
 			return "docente/docenteForm";
-		if(docente.getId()==null)
+		boolean nuevo = docente.getId() == null;
+		if(nuevo)
 			docenteService.agregar(docente);
 		else
 			docenteService.actualizar(docente);
-		return "redirect;/docente/index";
+		redirectAttributes.addFlashAttribute("success", nuevo ? "Docente registrado." : "Docente actualizado.");
+		return "redirect:/docente/index";
 	}
 	
 	//Atiende peticiones GET de la ruta "/docente/editar/{id}"
@@ -59,18 +65,22 @@ public class DocenteController {
 			@PathVariable("id") Long id) {
 		
 		Docente buscado = docenteService.buscar(id);
-		model.addAttribute("docente", buscado!=null ? buscado : new Docente());
+		if (buscado == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		model.addAttribute("docente", buscado);
 		
-		return "dicente/docenteForm";
+		return "docente/docenteForm";
 	}
 	
 	//Atiende peticiones GET de la ruta "/docente/eliminar/{id}"
-	@GetMapping("/eliminar/{id}")
-	public String docenteEliminar(Model model,
-			@PathVariable("id") Long id) {
-		
-		docenteService.eliminar(id);
-		return "redirect;/docente/index";
+	@PostMapping("/eliminar/{id}")
+	public String docenteEliminar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		try {
+			docenteService.eliminar(id);
+			redirectAttributes.addFlashAttribute("success", "Docente eliminado.");
+		} catch (RegistroEnUsoException ex) {
+			redirectAttributes.addFlashAttribute("error", ex.getMessage());
+		}
+		return "redirect:/docente/index";
 	}
 
 }

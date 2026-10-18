@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_frag/Base::site-head}"></head>
+<body>
+<header th:replace="~{_frag/Base::site-header}"></header>
+<main id="contenido" class="page-shell page-enter">
+    <div class="page-topline"><div><h1 class="page-title">Boleta de calificaciones</h1></div><a class="back-link" th:href="@{/alumno/index}">Volver a alumnos</a></div>
+    <div class="grade-overview">
+        <div class="grade-person"><span th:text="${alumno.apellido} + ', ' + ${alumno.nombre}"></span><small th:text="'DNI ' + ${alumno.dni}"></small></div>
+        <div class="grade-total"><small>Promedio general</small><strong th:text="${alumno.promedio != null ? #numbers.formatDecimal(alumno.promedio, 1, 2) : '—'}"></strong></div>
+    </div>
+    <p class="grade-note">Cada curso promedia tres unidades. El promedio general pondera por créditos solo los cursos completos. Si no hay notas suficientes, el resultado queda pendiente.</p>
+    <section aria-label="Notas por curso" th:unless="${#lists.isEmpty(notas)}">
+        <div class="grade-head"><span>Curso</span><span>Créditos</span><span>Unidad 1</span><span>Unidad 2</span><span>Unidad 3</span><span>Promedio</span><span sec:authorize="hasRole('ADMIN')">Acción</span></div>
+        <div class="grade-row" th:each="nota : ${notas}">
+            <strong class="grade-course" th:text="${nota.curso.nombre}"></strong>
+            <span class="grade-credit grade-cell" data-label="Créditos" th:text="${nota.curso.creditos}"></span>
+            <span class="grade-cell" data-label="Unidad 1" th:text="${nota.unidad1 != null ? nota.unidad1 : '—'}"></span>
+            <span class="grade-cell" data-label="Unidad 2" th:text="${nota.unidad2 != null ? nota.unidad2 : '—'}"></span>
+            <span class="grade-cell" data-label="Unidad 3" th:text="${nota.unidad3 != null ? nota.unidad3 : '—'}"></span>
+            <span class="grade-cell grade-average" data-label="Promedio" th:text="${nota.promedio != null ? #numbers.formatDecimal(nota.promedio, 1, 2) : 'Pendiente'}"></span>
+            <a class="text-action grade-action" sec:authorize="hasRole('ADMIN')" th:href="@{/nota/calificar/{alumno}/{curso}(alumno=${alumno.id},curso=${nota.curso.id})}">Calificar</a>
+        </div>
+    </section>
+    <div class="grade-empty" th:if="${#lists.isEmpty(notas)}"><strong>Aún no hay cursos matriculados</strong><p>La boleta aparecerá cuando el alumno tenga al menos un curso.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/nota/matricular/{id}(id=${alumno.id})}">Matricular cursos</a></div>
+</main>
+</body>
+</html>

@@ -9,5 +9,7 @@ import com.sistemas.entidad.Nota;
 public interface NotaRepository extends JpaRepository <Nota, NotaID>{
 	
 	public List<Nota> findByAlumnoId(Long idAlumno);
+	boolean existsByAlumnoId(Long idAlumno);
+	boolean existsByCursoId(Long idCurso);
 
 }

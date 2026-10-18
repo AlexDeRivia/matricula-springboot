@@ -1,47 +1,30 @@
-<html>
-<head th:replace="~{_frag/Base::site-head}"></head> 
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_frag/Base::site-head}"></head>
 <body>
-    <header th:replace="~{_frag/Base::site-header}"></header>
-    <article class="container mt-3">
-        <h3>Listado de Docentes</h3>
-        <div>
-            <a th:href="@{/docente/nuevo}" class="btn btn-outline-primary">Agregar Docente</a>
-            <a th:href="@{/}" class="btn btn-outline-secondary">Cerrar</a> 
-        </div>
-        <div>
-            <table class="table table-striped mt-2 table-bordered">
-                <thead>
-                    <tr class="table-primary">
-                        <th>Apellidos</th> 
-                        <th>Nombres</th> 
-                        <th>DNI</th>
-                        <th>Celular</th>
-                        <th>eMail</th>
-                        <th>Especialidad</th>
-                        <th>Fecha Ingreso</th>
-                        <th>Editar</th> 
-                        <th>Eliminar</th> <!-- Cambié </td> por </th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="docente : ${listaDocentes}">
-                        <td th:text="${docente.apellidos}">Apellidos</td> 
-                        <td th:text="${docente.nombres}">Nombres</td>
-                        <td th:text="${docente.dni}">DNI</td>
-                        <td th:text="${docente.celular}">Celular</td>
-                        <td th:text="${docente.eMail}">eMail</td>
-                        <td th:text="${docente.especialidad}">Especialidad</td> 
-                        <td th:text="${#calendars.format(docente.fechaIngreso, 'dd/MM/yyyy')}">Fecha Ingreso</td>
-                        <td><a th:href="@{/docente/editar/}+${docente.id}" class="btn btn-outline-warning btn-sm">Editar</a></td>
-                        <td><a th:href="@{/docente/eliminar/}+${docente.id}" class="btn btn-outline-danger btn-sm">Eliminar</a></td>
-                    </tr> 
-                </tbody>
-            </table>
-        </div> 
-        <div>
-            <a th:href="@{/docente/nuevo}" class="btn btn-outline-primary">Agregar Docente</a>
-            <a th:href="@{/}" class="btn btn-outline-secondary">Cerrar</a> 
-        </div>
-    </article>
+<header th:replace="~{_frag/Base::site-header}"></header>
+<main id="contenido" class="page-shell page-enter">
+    <div class="page-topline">
+        <div><h1 class="page-title">Docentes</h1><p class="page-subtitle">Directorio de responsables de los cursos.</p></div>
+        <div class="page-actions"><a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/docente/nuevo}">Nuevo docente</a><a class="back-link" th:href="@{/}">Volver al inicio</a></div>
+    </div>
+    <section class="surface" aria-label="Listado de docentes">
+        <div class="surface-head"><h2>Directorio docente</h2><span th:text="${#lists.size(listaDocentes)} + ' docentes'"></span></div>
+        <table class="ledger ledger--teachers" th:unless="${#lists.isEmpty(listaDocentes)}">
+            <thead><tr><th>Docente</th><th>Identidad</th><th>Contacto</th><th>Ingreso</th><th sec:authorize="hasRole('ADMIN')">Acciones</th></tr></thead>
+            <tbody><tr th:each="docente : ${listaDocentes}">
+                <td class="record-primary"><strong th:text="${docente.apellidos} + ', ' + ${docente.nombres}"></strong><small th:text="${docente.especialidad != null and !#strings.isEmpty(docente.especialidad) ? docente.especialidad : 'Sin especialidad'}"></small></td>
+                <td data-label="DNI"><span class="record-data" th:text="${docente.dni}"></span></td>
+                <td class="record-contact" data-label="Contacto"><span class="record-data" th:text="${docente.celular}"></span><span class="record-secondary"><small th:text="${docente.eMail}"></small></span></td>
+                <td class="record-date" data-label="Ingreso"><span class="record-data" th:text="${docente.fechaIngreso != null ? #calendars.format(docente.fechaIngreso, 'dd/MM/yyyy') : 'Pendiente'}"></span></td>
+                <td class="record-actions" data-label="Acciones" sec:authorize="hasRole('ADMIN')"><div class="action-list">
+                    <a class="text-action" th:href="@{/docente/editar/{id}(id=${docente.id})}">Editar</a>
+                    <form th:action="@{/docente/eliminar/{id}(id=${docente.id})}" method="post" data-progress><button type="submit" class="text-action text-action--danger" data-loading-label="Eliminando…">Eliminar</button></form>
+                </div></td>
+            </tr></tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(listaDocentes)}"><strong>Aún no hay docentes</strong><p>Registra un docente antes de asignarle cursos.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/docente/nuevo}">Registrar docente</a></div>
+    </section>
+</main>
 </body>
 </html>

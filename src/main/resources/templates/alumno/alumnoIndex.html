@@ -1,67 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="disenoBase::site-header"></head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_frag/Base::site-head}"></head>
 <body>
-	<header th:replace="disenoBase::site-header"></header>
-	
-	<main role="main">
-		<div class="container" id="divCasoForm">
-			<Article>
-				<header>
-					<H4 class="text-primary">Listado Alumnos</H4>
-				</header>
-				<table class="table table-striped table-bordered">
-					<thead class="thead-dark">
-						<tr>
-							<th>Apellidos</th>
-						    <th>Nombres</th>
-						    <th>DNI</th>
-						    <th>Fecha Nacimiento</th>
-						    <th>Celular</th>
-						    <th>eMail</th>
-						    <th>Direccion</th>
-						    <th>Promedio</th>
-						    <th>Editar</th>
-							<th>Eliminar</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="alumno : ${listaAlumnos}">
-							<td th:text="${alumno.apellido}"></td>
-							<td th:text="${alumno.nombre}"></td>
-							<td th:text="${alumno.dni}"></td>
-							<td th:text="${#calendars.format(
-								alumno.fechaNacimiento, 'dd/MM/yyyy')}"></td>
-							<td th:text="${alumno.celular}"></td>
-							<td th:text="${alumno.eMail}"></td>
-							<td th:text="${alumno.direccion}"></td>
-							<td th:text="${alumno.promedio}"></td>
-							<td><a class="btn btn-outline-warning btn-sm"
-								th:href="@{/alumno/editar/}+${alumno.id}">
-								Editar</a></td>
-							<td><a class="btn btn-outline-danger btn-sm"
-								th:href="@{/alumno/eliminar/}+${alumno.id}">
-								Eliminar</a></td>
-						</tr>
-					</tbody>
-					<tfoot>
-						<tr>
-							<td colspan=10>
-								<a class="btn btn-outline-primary"
-									th:href="@{/alumno/nuevo}" role="button">
-									Agregar Alumno
-								</a>
-								<a class="btn btn-outline-secondary"
-									th:href="@{/}" role="button">
-									Regresar
-								</a>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-			</Article>
-		</div>		
-	</main>
-	<footer th:replace="disenoBase::site-footer"></footer>
+<header th:replace="~{_frag/Base::site-header}"></header>
+<main id="contenido" class="page-shell page-enter">
+    <div class="page-topline">
+        <div>
+            <h1 class="page-title">Alumnos</h1>
+            <p class="page-subtitle">Identidad, matrículas y resultados académicos en un solo registro.</p>
+        </div>
+        <div class="page-actions">
+            <a class="btn btn-primary" th:href="@{/alumno/nuevo}" sec:authorize="hasRole('ADMIN')">Nuevo alumno</a>
+            <a class="back-link" th:href="@{/}">Volver al inicio</a>
+        </div>
+    </div>
+    <section class="surface" aria-label="Listado de alumnos">
+        <div class="surface-head"><h2>Registro de alumnos</h2><span th:text="${#lists.size(listaAlumnos)} + ' alumnos'"></span></div>
+        <table class="ledger" th:unless="${#lists.isEmpty(listaAlumnos)}">
+            <thead><tr><th>Alumno</th><th>Identidad</th><th>Contacto</th><th>Promedio</th><th>Acciones</th></tr></thead>
+            <tbody><tr th:each="alumno : ${listaAlumnos}">
+                <td class="record-primary"><strong th:text="${alumno.apellido} + ', ' + ${alumno.nombre}"></strong><small th:text="${alumno.eMail}"></small></td>
+                <td data-label="Identidad"><span class="record-data" th:text="${alumno.dni}"></span><span class="record-secondary"><small th:text="${alumno.fechaNacimiento != null ? #calendars.format(alumno.fechaNacimiento, 'dd/MM/yyyy') : 'Sin fecha de nacimiento'}"></small></span></td>
+                <td data-label="Contacto"><span class="record-data" th:text="${alumno.celular}"></span><span class="record-secondary"><small th:text="${alumno.direccion != null and !#strings.isEmpty(alumno.direccion) ? alumno.direccion : 'Sin dirección'}"></small></span></td>
+                <td data-label="Promedio"><span class="average-value" th:text="${alumno.promedio != null ? #numbers.formatDecimal(alumno.promedio, 1, 2) : 'Pendiente'}"></span></td>
+                <td class="record-actions" data-label="Acciones"><div class="action-list">
+                    <a class="text-action" th:href="@{/nota/boleta/{id}(id=${alumno.id})}">Boleta</a>
+                    <a class="text-action" sec:authorize="hasRole('ADMIN')" th:href="@{/nota/matricular/{id}(id=${alumno.id})}">Matricular</a>
+                    <a class="text-action" sec:authorize="hasRole('ADMIN')" th:href="@{/alumno/editar/{id}(id=${alumno.id})}">Editar</a>
+                    <form sec:authorize="hasRole('ADMIN')" th:action="@{/alumno/eliminar/{id}(id=${alumno.id})}" method="post" data-progress><button type="submit" class="text-action text-action--danger" data-loading-label="Eliminando…">Eliminar</button></form>
+                </div></td>
+            </tr></tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(listaAlumnos)}"><strong>Aún no hay alumnos</strong><p>Registra al primer alumno para comenzar con sus matrículas y boleta.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/alumno/nuevo}">Registrar alumno</a></div>
+    </section>
+</main>
 </body>
 </html>

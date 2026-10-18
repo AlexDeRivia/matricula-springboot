@@ -14,6 +14,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework. stereotype.Controller; 
 import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.sistemas.servicio.RegistroEnUsoException;
 
 
 
@@ -26,7 +30,7 @@ public class CursoController {
 	@GetMapping({"/","index"})
 public String index(Model model) {
 	model.addAttribute("listaCursos",cursoService.listarTodos());
-	return "curso/cursoIndex.html";
+	return "curso/cursoIndex";
 	}
 
   //Atiende la peticion de GET de la ruta "/curso/nuevo"
@@ -34,7 +38,7 @@ public String index(Model model) {
 public String mostrarFormularioNuevo(Model model) {
  model.addAttribute("curso", new Curso());
  model.addAttribute("listaDocentes", docenteService.listarTodos());
- return "curso/cursoForm.html";
+ return "curso/cursoForm";
  
 }
   
@@ -42,19 +46,25 @@ public String mostrarFormularioNuevo(Model model) {
 @PostMapping ("/guardar")
 public String procesarFormulario (Model model,
 		@Valid @ModelAttribute("curso") Curso curso,
-		BindingResult bindingResult) {
+		BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	if (curso.getDocente() == null || curso.getDocente().getId() == null
+			|| docenteService.buscar(curso.getDocente().getId()) == null) {
+		bindingResult.rejectValue("docente", "docente.invalido", "Seleccione un docente válido");
+	}
 	
 	if(bindingResult.hasErrors()) {
 		model.addAttribute("listaDocentes",docenteService.listarTodos());
-		return "curso/cursoForm.html";
+		return "curso/cursoForm";
 		
 	}
 	
-	if(curso.getId() == null)
+	boolean nuevo = curso.getId() == null;
+	if(nuevo)
 		cursoService.agregar(curso);
 	else 
 		cursoService.actualizar(curso);
-	return "redirect: /curso/index";
+	redirectAttributes.addFlashAttribute("success", nuevo ? "Curso registrado." : "Curso actualizado.");
+	return "redirect:/curso/index";
 }
  
 //Atiende peticiones GET de la ruta "/curso/editar/{id}"
@@ -64,17 +74,21 @@ public String mostrarFormularioNuevo(Model model,
 		@PathVariable("id") Long id) {
 	
 	Curso buscado = cursoService.buscar(id);
- model.addAttribute("curso", buscado!=null ? buscado : new Curso());
+ if (buscado == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+ model.addAttribute("curso", buscado);
  model.addAttribute("listaDocentes", docenteService.listarTodos());
  return "curso/cursoForm";
 
 }
 	//Atiente peticiones GET de la ruta "/curso/eliminar/{id}"
-@GetMapping("/eliminar/{id}")
-public String cursoEliminar(Model model,
-		@PathVariable("id") Long id) {
-	
-	cursoService.eliminar(id);
+@PostMapping("/eliminar/{id}")
+public String cursoEliminar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+	try {
+		cursoService.eliminar(id);
+		redirectAttributes.addFlashAttribute("success", "Curso eliminado.");
+	} catch (RegistroEnUsoException ex) {
+		redirectAttributes.addFlashAttribute("error", ex.getMessage());
+	}
 	return "redirect:/curso/index";
 }
 }

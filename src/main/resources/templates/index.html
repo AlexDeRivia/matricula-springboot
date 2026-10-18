@@ -1,16 +1,31 @@
-<html>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{_frag/Base::site-head}"></head>
 <body>
-    <header th:replace="~{_frag/Base::site-header}"></header>
-    <article class="container mt-3 p-0">
-        <div class="text-center bg-light p-5 rounded">
-            <img th:src="@{/images/icono-app.png}" class="img img-fluid mx-auto" height="731" width="750">
-            <h1 class="mt-4 pt-4 text-success">Bienvenidos a Spring Boot con JPA</h1>
-            <p class="lead">
-                Ejemplo de Aplicación WEB-MVC con Spring Boot,
-                Spring Data JPA, Spring Security, PostgreSQL y Bootstrap
-            </p>
+<header th:replace="~{_frag/Base::site-header}"></header>
+<main id="contenido" class="home-main">
+    <div class="home-heading">
+        <h1>El registro, a mano.</h1>
+        <p>Encuentra a un alumno, prepara su matrícula y revisa sus notas. La oferta de cursos y el directorio docente están a un paso.</p>
+    </div>
+    <div class="home-board" aria-label="Áreas de trabajo">
+        <a class="home-primary" th:href="@{/alumno/index}">
+            <span class="home-primary-tab">Alumnos</span>
+            <span class="home-primary-content">
+                <strong>Comienza por las personas.</strong>
+                <span>Identidad, matrícula y boleta de cada alumno.</span>
+                <span class="home-open">Abrir alumnos</span>
+            </span>
+        </a>
+        <div class="home-secondary">
+            <a th:href="@{/curso/index}"><span><strong>Cursos</strong><small>Oferta, créditos y docente responsable</small></span><span class="home-open">Abrir cursos</span></a>
+            <a th:href="@{/docente/index}"><span><strong>Docentes</strong><small>Identidad y especialidad del equipo</small></span><span class="home-open">Abrir docentes</span></a>
         </div>
-    </article>
+    </div>
+    <section class="home-workflow" aria-labelledby="workflow-title">
+        <h2 id="workflow-title">Para registrar una calificación</h2>
+        <ol><li>Abre la ficha del alumno.</li><li>Selecciona los cursos de su matrícula.</li><li>En la boleta, registra las tres unidades de cada curso.</li></ol>
+    </section>
+</main>
 </body>
 </html>

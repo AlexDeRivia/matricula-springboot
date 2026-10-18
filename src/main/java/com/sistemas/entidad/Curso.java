@@ -2,7 +2,6 @@ package com.sistemas.entidad;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,11 +16,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table (name = "cursos")
-@Data
+@Getter
+@Setter
 public class Curso {
 
 	@Id
@@ -43,7 +44,7 @@ public class Curso {
 	nullable = false)
 	private Docente docente;
 	
-	@OneToMany (fetch = FetchType.LAZY, mappedBy = "curso", cascade = CascadeType.ALL)
+	@OneToMany (fetch = FetchType.LAZY, mappedBy = "curso")
 	private List<Nota> notas;
 	
 	public Curso() {

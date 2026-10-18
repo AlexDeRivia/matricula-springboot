@@ -4,14 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table (name = "notas")
-@Data
+@IdClass(NotaID.class)
+@Getter
+@Setter
 public class Nota {
 	
 	@Id
@@ -36,5 +40,14 @@ public class Nota {
 	private Double unidad1;
 	private Double unidad2;
 	private Double unidad3;
+
+	public Double getPromedio() {
+		if (unidad1 == null || unidad2 == null || unidad3 == null) return null;
+		return (unidad1 + unidad2 + unidad3) / 3;
+	}
+
+	public boolean tieneCalificaciones() {
+		return unidad1 != null || unidad2 != null || unidad3 != null;
+	}
 }
 

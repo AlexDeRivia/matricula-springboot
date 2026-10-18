@@ -1,41 +1,28 @@
-<html>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{_frag/Base::site-head}"></head>
 <body>
-    <header th:replace="~{_frag/Base::site-header}"></header>
-    <article class="container mt-3">
-        <h3>Lista de Cursos</h3>
-        <div>
-            <th:block th:replace="~{_frag/Inputs::btn_agregar(@{/curso/nuevo}, 'Agregar Curso')}"></th:block>
-            <th:block th:replace="~{_frag/Inputs::btn_cerrar}"></th:block>
-        </div>
-        <div>
-            <table class="table table-striped table-bordered mt-2">
-                <thead>
-                    <tr class="table-primary">
-                        <th>Nombre</th> 
-                        <th>Créditos</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="curso : ${listaCursos}">
-                        <td th:text="${curso.nombre}">nombre</td> 
-                        <td th:text="${curso.creditos}">creditos</td>
-                        <td>
-                            <th:block th:replace="~{_frag/Inputs::btn_editar(@{/curso/editar/} + ${curso.id})}"></th:block>
-                        </td>
-                        <td>
-                            <th:block th:replace="~{_frag/Inputs::btn_eliminar(@{/curso/eliminar/} + ${curso.id})}"></th:block>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <th:block th:replace="~{_frag/Inputs::btn_agregar(@{/curso/nuevo}, 'Agregar Curso')}"></th:block>
-            <th:block th:replace="~{_frag/Inputs::btn_cerrar}"></th:block>
-        </div>
-    </article>
+<header th:replace="~{_frag/Base::site-header}"></header>
+<main id="contenido" class="page-shell page-enter">
+    <div class="page-topline">
+        <div><h1 class="page-title">Cursos</h1><p class="page-subtitle">Oferta académica, créditos y docentes asignados.</p></div>
+        <div class="page-actions"><a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/curso/nuevo}">Nuevo curso</a><a class="back-link" th:href="@{/}">Volver al inicio</a></div>
+    </div>
+    <section class="surface" aria-label="Listado de cursos">
+        <div class="surface-head"><h2>Oferta de cursos</h2><span th:text="${#lists.size(listaCursos)} + ' cursos'"></span></div>
+        <table class="ledger" th:unless="${#lists.isEmpty(listaCursos)}">
+            <thead><tr><th>Curso</th><th>Créditos</th><th sec:authorize="hasRole('ADMIN')">Acciones</th></tr></thead>
+            <tbody><tr th:each="curso : ${listaCursos}">
+                <td class="record-primary"><strong th:text="${curso.nombre}"></strong><small th:text="'Docente: ' + ${curso.docente.apellidos} + ', ' + ${curso.docente.nombres}"></small></td>
+                <td data-label="Créditos"><span class="average-value" th:text="${curso.creditos}"></span></td>
+                <td class="record-actions" data-label="Acciones" sec:authorize="hasRole('ADMIN')"><div class="action-list">
+                    <a class="text-action" th:href="@{/curso/editar/{id}(id=${curso.id})}">Editar</a>
+                    <form th:action="@{/curso/eliminar/{id}(id=${curso.id})}" method="post" data-progress><button type="submit" class="text-action text-action--danger" data-loading-label="Eliminando…">Eliminar</button></form>
+                </div></td>
+            </tr></tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(listaCursos)}"><strong>Aún no hay cursos</strong><p>Crea un curso y asígnale un docente para poder matricular alumnos.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/curso/nuevo}">Crear curso</a></div>
+    </section>
+</main>
 </body>
 </html>
