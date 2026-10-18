@@ -6,5 +6,6 @@
 <main id="contenido" class="page-shell page-enter">
     <div class="denied-copy"><h1>Acceso restringido.</h1><p>Tu cuenta puede consultar el registro, pero esta operación necesita permisos de edición.</p><p th:if="${roles}" th:text="'Permisos actuales: ' + ${roles}"></p><div class="page-actions"><a th:href="@{/}" class="btn btn-primary">Volver al inicio</a><a th:href="@{/usuario/login}" class="btn btn-outline-secondary">Cambiar de cuenta</a></div></div>
 </main>
+<footer th:replace="~{_frag/Base::site-footer}"></footer>
 </body>
 </html>

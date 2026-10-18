@@ -24,5 +24,6 @@
     </section>
     <div class="grade-empty" th:if="${#lists.isEmpty(notas)}"><strong>Aún no hay cursos matriculados</strong><p>La boleta aparecerá cuando el alumno tenga al menos un curso.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/nota/matricular/{id}(id=${alumno.id})}">Matricular cursos</a></div>
 </main>
+<footer th:replace="~{_frag/Base::site-footer}"></footer>
 </body>
 </html>

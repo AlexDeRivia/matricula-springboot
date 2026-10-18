@@ -24,5 +24,6 @@
         <div class="empty-state" th:if="${#lists.isEmpty(listaCursos)}"><strong>Aún no hay cursos</strong><p>Crea un curso y asígnale un docente para poder matricular alumnos.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/curso/nuevo}">Crear curso</a></div>
     </section>
 </main>
+<footer th:replace="~{_frag/Base::site-footer}"></footer>
 </body>
 </html>

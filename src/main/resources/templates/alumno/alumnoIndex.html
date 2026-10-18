@@ -34,5 +34,6 @@
         <div class="empty-state" th:if="${#lists.isEmpty(listaAlumnos)}"><strong>Aún no hay alumnos</strong><p>Registra al primer alumno para comenzar con sus matrículas y boleta.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/alumno/nuevo}">Registrar alumno</a></div>
     </section>
 </main>
+<footer th:replace="~{_frag/Base::site-footer}"></footer>
 </body>
 </html>

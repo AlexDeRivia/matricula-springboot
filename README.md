@@ -1,66 +1,98 @@
-# Sistema de control académico
+# Control Académico
 
-**Demo pública:** https://matricula-springboot.onrender.com
+Un sistema de matrícula y calificaciones construido para recorrer el trabajo académico de principio a fin: del registro de un alumno a su boleta. Este repositorio contiene **la aplicación completa del MVP**; la instancia pública ejecuta el mismo código con datos ficticios y permisos de consulta.
 
-**Acceso de consulta:** `demo` / `demo123`
+**[Abrir la demo](https://matricula-springboot.onrender.com)** · **[Ver el recorrido en video](docs/portfolio/recorrido.webm)** · **[Ejecutar en local](#ejecución-local)**
 
-El servicio gratuito puede tardar entre uno y dos minutos en responder después de un periodo de inactividad.
+[![Vista de inicio de Control Académico: acceso a alumnos, cursos y docentes](docs/portfolio/inicio.jpg)](https://matricula-springboot.onrender.com)
 
-![Pantalla de inicio de Control Académico](docs/portfolio/inicio.jpg)
+> **Para entrar:** usuario `demo`, clave `demo123`. El servicio gratuito puede tardar uno o dos minutos en despertar tras un periodo de inactividad.
 
-[Recorrido en video (18 s)](docs/portfolio/recorrido.webm) · [Alumnos](docs/portfolio/alumnos.jpg) · [Boleta](docs/portfolio/boleta.jpg) · [Boleta en móvil](docs/portfolio/boleta-movil.jpg)
+## El recorrido
 
-Aplicación educativa de Spring Boot para registrar alumnos, docentes y cursos, matricular alumnos, cargar calificaciones y consultar su boleta. El perfil `demo` arranca por defecto con una base H2 en memoria y datos completamente ficticios. Los datos vuelven a su estado inicial al reiniciar la aplicación.
+| Etapa | Lo que permite hacer |
+| --- | --- |
+| Personas | Registrar y consultar alumnos y docentes, con validaciones en sus formularios. |
+| Oferta | Crear cursos con créditos y asignarles un docente. |
+| Matrícula | Seleccionar los cursos de cada alumno y revisar su inscripción. |
+| Evaluación | Cargar o corregir las notas de tres unidades, de 0 a 20. Las notas pueden quedar pendientes. |
+| Boleta | Consultar notas por curso y el promedio general ponderado por créditos. |
 
-## Requisitos
+La demo pública permite **explorar listados y boletas**. Para probar altas, cambios y matrículas, ejecuta el proyecto localmente con una cuenta administradora.
 
-- JDK 21 o superior.
-- Conexión a Internet la primera vez que Maven descargue sus dependencias.
+<details>
+<summary>Ver cómo se calculan las notas y qué cambios protege el sistema</summary>
 
-## Ejecutar en Windows (PowerShell)
+El promedio de un curso es la media de sus tres unidades. Aparece como «Pendiente» hasta que estén completas. El promedio general incluye solo cursos completos y pondera cada promedio por los créditos del curso.
+
+Para conservar la coherencia de los datos, el sistema impide eliminar alumnos con matrículas, cursos con alumnos matriculados y docentes con cursos asignados. Una matrícula con notas no se puede retirar hasta borrar sus calificaciones.
+
+</details>
+
+### Una vista más cercana
+
+| Alumnos | Boleta |
+| --- | --- |
+| [![Listado de alumnos](docs/portfolio/alumnos.jpg)](docs/portfolio/alumnos.jpg) | [![Boleta de calificaciones](docs/portfolio/boleta.jpg)](docs/portfolio/boleta.jpg) |
+
+[Ver la boleta en móvil](docs/portfolio/boleta-movil.jpg) · [Ver el recorrido grabado](docs/portfolio/recorrido.webm)
+
+## Stack y estructura
+
+| Capa | Tecnología |
+| --- | --- |
+| Aplicación | Java 21, Spring Boot 3.5, Spring MVC |
+| Vistas | Thymeleaf, CSS propio, Bootstrap |
+| Datos | Spring Data JPA, H2 en memoria para la demo; controlador JDBC de PostgreSQL incluido |
+| Acceso | Spring Security: lector y administrador |
+| Construcción | Maven Wrapper, Docker multietapa |
+| Pruebas | JUnit, Spring Boot Test y MockMvc |
+
+El proyecto usa vistas renderizadas en el servidor. `Alumno`, `Curso` y `Docente` son los registros principales; la relación entre alumno y curso conserva la matrícula y sus tres calificaciones. Los datos de ejemplo se cargan al iniciar el perfil `demo`.
+
+## Ejecución local
+
+Necesitas **JDK 21 o superior** y conexión a Internet en la primera ejecución para descargar dependencias. Desde la raíz del repositorio, en PowerShell:
 
 ```powershell
-$env:JAVA_HOME = 'C:\ruta\a\jdk-21'
 $env:DEMO_ADMIN_PASSWORD = 'elige-una-clave-local'
 .\mvnw.cmd spring-boot:run
 ```
 
-Abre `http://localhost:8080`. El usuario `demo` con clave `demo123` puede consultar los listados. Para registrar, editar, matricular o eliminar, inicia sesión como `admin-demo` con el valor de `DEMO_ADMIN_PASSWORD`. Si no defines esa variable, la cuenta administradora no se crea.
+Abre [http://localhost:8080](http://localhost:8080). Usa `demo` / `demo123` para consultar, o `admin-demo` / el valor de `DEMO_ADMIN_PASSWORD` para editar. Si no defines esa variable, la cuenta administradora no se crea. Si Java 21 no es tu versión activa, configura `JAVA_HOME` antes de iniciar Maven.
 
-La cuenta `demo` solo puede consultar. No uses datos reales ni habilites la cuenta administradora en una instancia pública.
+Para ejecutar las pruebas:
 
-## Demo pública de solo lectura
+```powershell
+.\mvnw.cmd test
+```
 
-La demo pública usa el mismo perfil `demo`, con datos ficticios y H2 en memoria. Define estas variables en el servicio web:
+### Modo público de solo lectura
+
+La instancia desplegada usa estas variables:
 
 ```text
 SPRING_PROFILES_ACTIVE=demo
 DEMO_PUBLIC_READ_ONLY=true
 ```
 
-No definas `DEMO_ADMIN_PASSWORD` en ese servicio. El modo `DEMO_PUBLIC_READ_ONLY` impide crear la cuenta administradora incluso si se configura una contraseña por error. El puerto se toma de `PORT` cuando lo proporciona el hosting; localmente sigue siendo `8080`.
+`DEMO_PUBLIC_READ_ONLY=true` impide crear la cuenta administradora incluso si se configurara una contraseña por error. La base H2 vive en memoria: **los datos ficticios se restauran al reiniciar** y no se necesita un servidor de base de datos para esta demo. El puerto se toma de `PORT` cuando lo proporciona el hosting; en local es `8080`.
 
-El `Dockerfile` construye la aplicación con Java 21 y permite desplegarla en Render como servicio web Docker. Para comprobarla con Docker local:
+También puedes reproducir ese modo con Docker:
 
 ```powershell
 docker build -t control-academico-demo .
 docker run --rm -p 10000:10000 -e PORT=10000 -e SPRING_PROFILES_ACTIVE=demo -e DEMO_PUBLIC_READ_ONLY=true control-academico-demo
 ```
 
-Abre `http://localhost:10000` e inicia sesión con `demo` / `demo123`. Al reiniciar el proceso, las altas y cambios de H2 se pierden y se restauran los datos de ejemplo. La instancia pública no necesita una base de datos externa.
+Después abre [http://localhost:10000](http://localhost:10000). No introduzcas datos reales en el perfil `demo`.
 
-## Pruebas
+## Alcance y uso del código
 
-```powershell
-.\mvnw.cmd test
-```
+Este es un **MVP de portfolio**, no un sistema preparado para almacenar expedientes reales de forma persistente. No incluye periodos académicos históricos ni exportación de boletas. La instancia pública está limitada a consulta y se restablece al reiniciar.
 
-Los tests inician el perfil demo, comprueban los datos de ejemplo y recorren registro, matrícula, calificaciones, boleta, cálculo de promedios, protección de relaciones y autorización.
+El repositorio es público para mostrar el trabajo, pero **no incluye una licencia que conceda permisos generales para reutilizar, modificar o redistribuir el código original**. Los componentes de terceros conservan sus propias licencias. Si necesitas usar partes del proyecto fuera de las funciones de visualización y fork de GitHub, contacta al autor para acordar los términos.
 
-## Flujo del MVP
+---
 
-Un administrador registra docentes, cursos y alumnos; matricula al alumno desde su listado; abre la boleta y carga o edita las tres notas de cada curso. Un usuario lector puede consultar los listados y boletas. Las notas admiten valores de 0 a 20 y pueden quedar pendientes.
-
-El promedio de un curso es la media aritmética de sus tres unidades. Solo los cursos con las tres notas participan en el promedio general del alumno, ponderados por sus créditos. Si ninguno está completo, la boleta muestra «Pendiente». El promedio se calcula a partir de las notas, sin introducirlo manualmente.
-
-No se puede eliminar un alumno con matrículas, un curso con alumnos matriculados ni un docente con cursos asignados. Tampoco se puede retirar una matrícula que ya tiene calificaciones; el sistema muestra un mensaje claro y conserva los datos. Para retirarla, primero se deben borrar sus notas desde «Calificar». No hay todavía reporte histórico por periodos académicos ni exportación de boletas; quedan fuera de este MVP.
+Proyecto personal de [AlexDeRivia](https://github.com/AlexDeRivia). [Explorar la demo](https://matricula-springboot.onrender.com).

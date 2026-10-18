@@ -26,5 +26,6 @@
         <div class="empty-state" th:if="${#lists.isEmpty(listaDocentes)}"><strong>Aún no hay docentes</strong><p>Registra un docente antes de asignarle cursos.</p><a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/docente/nuevo}">Registrar docente</a></div>
     </section>
 </main>
+<footer th:replace="~{_frag/Base::site-footer}"></footer>
 </body>
 </html>
